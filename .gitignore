@@ -4,7 +4,7 @@ build
 tmp
 
 # Secrets
-.env
+# .env // leaving this in for illustrative purposes :) 
 .env.local
 .env.production.local
 .env.development.local
