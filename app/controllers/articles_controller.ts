@@ -2,8 +2,6 @@ import Article from '#models/article'
 import { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 
-logger.use()
-
 export default class ArticlesController {
   /**
    * Display a list of articles
