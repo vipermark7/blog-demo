@@ -11,19 +11,19 @@
           <thead>
             <tr>
               <th>Title</th>
-              <th>Author</th>
-              <th>Status</th>
+              <th>Body</th>
               <th>Created At</th>
-              <th>Actions</th>
+              <th>Last Updated</th>
             </tr>
           </thead>
           <tbody>
             @each(article in articles)
               <tr>
                 <td>{{ article.title }}</td>
-                <td>{{ article.author }}</td>
-                <td>{{ article.status }}</td>
+                <td>{{ article.body }}</td>
                 <td>{{ article.createdAt.toFormat('dd/MM/yyyy') }}</td>
+                <td>{{ article.updatedAt.toFormat('dd/MM/yyyy') }}</td>
+
                 <td>
                   <div class="d-flex gap-2">
                     <a href="{{ route('articles.show', [article.id]) }}" class="btn btn-sm btn-info">View</a>
@@ -37,7 +37,7 @@
               </tr>
             @else
               <tr>
-                <td colspan="5" class="text-center">No blog posts found</td>
+                <td colspan="3" class="text-center">No blog posts found</td>
               </tr>
             @end
           </tbody>
