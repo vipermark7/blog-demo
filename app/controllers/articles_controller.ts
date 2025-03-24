@@ -3,10 +3,10 @@ import { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 
 export default class ArticlesController {
-
-  async index({ view }: HttpContext) {
+  async index({ view, response, logger }: HttpContext) {
     const articles = await Article.all()
-    return view.render('posts/index', { articles })
+    logger.info(response.json)
+    return view.render('articles/index', { articles })
   }
 
   async show({ params, view, response }: HttpContext) {
