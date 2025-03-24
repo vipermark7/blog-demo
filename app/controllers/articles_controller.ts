@@ -6,9 +6,10 @@ export default class ArticlesController {
   /**
    * Display a list of articles
    */
-  async index({ view }: HttpContext) {
+  async index({ view, response, logger }: HttpContext) {
     const articles = await Article.all()
-    return view.render('posts/index', { articles })
+    logger.info(response.json)
+    return view.render('articles/index', { articles })
   }
 
   /**

@@ -15,18 +15,23 @@ const loggerConfig = defineConfig({
       name: env.get('APP_NAME'),
       level: env.get('LOG_LEVEL', 'info'),
       transport: {
-        targets: targets()
-          .push({
-             transport: 'pino/file',
-             level: 'info',
-             options: {
-               destination: '~/adonisjs.log'
-             }
-          })
-          .toArray()
+        targets: [
+          {
+            target: 'pino/file',
+            level: 'info',
+            options: {
+              destination: 1
+            }
+          },
+          {
+            target: 'pino-pretty',
+            level: 'info',
+            options: {}
+          },
+        ]
       }
     }
-  },
+  }
 })
 
 export default loggerConfig
