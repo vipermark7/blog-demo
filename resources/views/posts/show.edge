@@ -1,38 +1,32 @@
-@layout('layouts/main')
-
-@section('content')
+@component('layouts/main', { title: 'Show Blog Post' })
+  @slot('main')
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{{ post.title }}</h1>
+    <h1>{{ article.title }}</h1>
     <div>
-      <a href="{{ route('posts.edit', [post.id]) }}" class="btn btn-warning">Edit</a>
-      <a href="{{ route('posts.index') }}" class="btn btn-secondary ms-2">Back to List</a>
+      <a href="{{ route('articles.edit', [article.id]) }}" class="btn btn-warning">Edit</a>
+      <a href="{{ route('articles.index') }}" class="btn btn-secondary ms-2">Back to List</a>
     </div>
   </div>
 
   <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between">
-      <span>Author: <strong>{{ post.author }}</strong></span>
-      <span class="badge {{ post.isPublished ? 'bg-success' : 'bg-secondary' }}">
-        {{ post.isPublished ? 'Published' : 'Draft' }}
-      </span>
-    </div>
     <div class="card-body">
       <div class="mb-4">
-        <h5>Content</h5>
+        <h5>Title</h5>
         <div class="content border rounded p-3 bg-light">
-          {{ post.content }}
+          {{ article.title }}
+        </div>
+        <h5>Body</h5>
+        <div class="content border rounded p-3 bg-light">
+          {{ article.body }}
         </div>
       </div>
-      
       <div class="row">
         <div class="col-md-6">
-          <p><strong>Slug:</strong> {{ post.slug }}</p>
-        </div>
-        <div class="col-md-6">
-          <p><strong>Created:</strong> {{ post.createdAt.toFormat('dd/MM/yyyy HH:mm') }}</p>
-          <p><strong>Last Updated:</strong> {{ post.updatedAt.toFormat('dd/MM/yyyy HH:mm') }}</p>
+          <p><strong>Created:</strong> {{ article.createdAt.toFormat('dd/MM/yyyy HH:mm') }}</p>
+          <p><strong>Last Updated:</strong> {{ article.updatedAt.toFormat('dd/MM/yyyy HH:mm') }}</p>
         </div>
       </div>
     </div>
   </div>
+  @end
 @end
