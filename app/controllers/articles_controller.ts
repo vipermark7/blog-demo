@@ -1,25 +1,24 @@
 import Article from '#models/article'
 import { HttpContext } from '@adonisjs/core/http'
-import logger from '@adonisjs/core/services/logger'
 
 export default class ArticlesController {
   async index({ view, response, logger }: HttpContext) {
     const articles = await Article.all()
     logger.info(response.json)
-    return view.render('articles/index', { articles })
+    return view.render('posts/index', { articles })
   }
 
-  async show({ params, view, response }: HttpContext) {
+  async show({ params, view, response, logger }: HttpContext) {
     try {
       const article = await Article.findOrFail(params.id)
       return view.render('posts/show', { article })
     } catch (error) {
       logger.error(error.message)
-      return response.redirect().toRoute('articles.index.edge')
+      return response.redirect().toRoute('articles.index')
     }
   }
 
-  async edit({ params, view, response }: HttpContext) {
+  async edit({ params, view, response, logger }: HttpContext) {
     try {
       const article = await Article.findOrFail(params.id)
       return view.render('posts/edit', { article })
@@ -35,7 +34,7 @@ export default class ArticlesController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request, response }: HttpContext) {
+  async store({ request, response, logger }: HttpContext) {
     const data = request.only(['title', 'body'])
 
     try {
@@ -48,39 +47,34 @@ export default class ArticlesController {
     }
   }
 
-  async update({ params, request, response }: HttpContext) {
+  async update({ params, request, response, logger }: HttpContext) {
     const data = request.only(['title', 'body'])
 
     try {
       const article = await Article.findOrFail(params.id)
       article.merge(data)
       await article.save()
-
-      return response.redirect().toRoute('posts.show', [article.id]).withFlash({
-        success: 'Article updated successfully'
-      })
+      logger.log("info", "articles.update")
+      logger.info(response.json)
+      return response.redirect().toRoute('posts.show', [article.id])
     } catch (error) {
       logger.error(error.message)
-      return response.redirect().back().withFlash({
-        error: 'Failed to update article',
-        input: request.all()
-      })
+      return response.redirect().back()
     }
   }
 
-  async destroy({ params, response }: HttpContext) {
+  async destroy({ params, response, logger }: HttpContext) {
     try {
       const article = await Article.findOrFail(params.id)
+      logger.info(`ARTICLES_CONTROLLER_DESTROY`)
+      logger.info(params.id)
+      logger.info(article.toJSON)
       await article.delete()
 
-      return response.redirect().toRoute('posts.index').withFlash({
-        success: 'Article deleted successfully'
-      })
+      return response.redirect().toRoute('posts.index')
+
     } catch (error) {
       logger.error(error.message)
-      return response.redirect().toRoute('posts.index').withFlash({
-        error: 'Failed to delete article'
-      })
     }
   }
 }
