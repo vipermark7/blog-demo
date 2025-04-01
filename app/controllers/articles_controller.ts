@@ -2,14 +2,15 @@ import Article from '#models/article'
 import { HttpContext } from '@adonisjs/core/http'
 
 export default class ArticlesController {
-  async index({ view, response, logger }: HttpContext) {
+  async index({ view, request, logger }: HttpContext) {
+    logger.info(request.url(true))
     const articles = await Article.all()
-    logger.info(response.json)
     return view.render('posts/index', { articles })
   }
 
-  async show({ params, view, response, logger }: HttpContext) {
+  async show({ params, view, request, response, logger }: HttpContext) {
     try {
+      logger.info(request.url(true))
       const article = await Article.findOrFail(params.id)
       return view.render('posts/show', { article })
     } catch (error) {
@@ -17,29 +18,57 @@ export default class ArticlesController {
       return response.redirect().toRoute('articles.index')
     }
   }
-
-  async edit({ params, view, response, logger }: HttpContext) {
+  /**
+   * Render the form to edit an existing post by its id.
+   */
+  async edit({ params, view, request, response, logger }: HttpContext) {
     try {
+      logger.info(request.url(true))
       const article = await Article.findOrFail(params.id)
       return view.render('posts/edit', { article })
     } catch (error) {
       logger.error(error.message)
       return response.redirect().toRoute('articles.index')
     }
-  } 
-  async create({ view }: HttpContext) {
-    return view.render('posts/create')
+  }
+
+  /**
+   * Handle the form submission to update a specific post by id
+   */
+  async update({ params, request, response, logger }: HttpContext) {
+    const data = request.only(['title', 'body'])
+
+    try {
+      logger.info(request.url(true))
+      const article = await Article.findOrFail(params.id)
+      article.merge(data)
+      await article.save()
+      return response.redirect().toRoute('articles.index')
+    } catch (error) {
+      logger.error(error.message)
+      return response.redirect().toRoute('articles.index')
+    }
+  }
+
+  async create({ view, request, response, logger }: HttpContext) {
+    try {
+      logger.info(request.url(true))
+      return view.render('posts/create')
+    } catch (error) {
+      logger.error(error.message)
+      return response.redirect().toRoute('articles.index')
+    }
   }
 
   /**
    * Handle form submission for the create action
    */
   async store({ request, response, logger }: HttpContext) {
+    logger.info(request.url(true))
     const data = request.only(['title', 'body'])
 
     try {
-      const article = await Article.create(data)
-      console.log(article)
+      await Article.create(data)
       return response.redirect().toRoute('posts.index')
     } catch (error) {
       logger.error(error.message)
@@ -47,34 +76,16 @@ export default class ArticlesController {
     }
   }
 
-  async update({ params, request, response, logger }: HttpContext) {
-    const data = request.only(['title', 'body'])
-
+  async destroy({ params, request, response, logger }: HttpContext) {
     try {
       const article = await Article.findOrFail(params.id)
-      article.merge(data)
-      await article.save()
-      logger.log("info", "articles.update")
-      logger.info(response.json)
-      return response.redirect().toRoute('posts.show', [article.id])
-    } catch (error) {
-      logger.error(error.message)
-      return response.redirect().back()
-    }
-  }
-
-  async destroy({ params, response, logger }: HttpContext) {
-    try {
-      const article = await Article.findOrFail(params.id)
-      logger.info(`ARTICLES_CONTROLLER_DESTROY`)
-      logger.info(params.id)
-      logger.info(article.toJSON)
+      logger.info(request.url(true))
       await article.delete()
-
-      return response.redirect().toRoute('posts.index')
+      return response.redirect().back()
 
     } catch (error) {
       logger.error(error.message)
+      return error
     }
   }
 }

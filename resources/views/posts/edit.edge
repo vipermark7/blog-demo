@@ -1,13 +1,13 @@
 @component('layouts/main', { title: 'Edit Blog Post' })
   @slot('main')
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1>Edit Blog Post</h1>
+      <h1>Edit Article</h1>
       <a href="{{ route('articles.index') }}" class="btn btn-secondary">Back to All Articles</a>
     </div>
 
     <div class="card">
       <div class="card-body">
-        <form action="{{ route('articles.update', [article.id]) }}" method="PUT">
+        <form action="{{ route('articles.update', [article.id]) }}?_method=PUT">
           {{ csrfField() }}
           
           <div class="mb-3">

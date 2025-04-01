@@ -13,7 +13,7 @@
               <th>Title</th>
               <th>Body</th>
               <th>Created At</th>
-              <th>Last Updated</th>
+              <th>Last updated</th>
             </tr>
           </thead>
           <tbody>
@@ -21,14 +21,22 @@
               <tr>
                 <td>{{ article.title }}</td>
                 <td>{{ article.body }}</td>
-                <td>{{ article.createdAt.toFormat('dd/MM/yyyy') }}</td>
-                <td>{{ article.updatedAt.toFormat('dd/MM/yyyy') }}</td>
+                <td>{{ article.createdAt.toFormat('MM/dd/yyyy') }}</td>
+                <td>{{ article.updatedAt.toFormat('MM/dd/yyyy') }}</td>
 
                 <td>
                   <div class="d-flex gap-2">
-                    <a href="{{ route('articles.show',    [article.id]) }}" class="btn btn-sm btn-info">View</a>
-                    <a href="{{ route('articles.edit',    [article.id]) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="{{ route('articles.destroy', [article.id]) }}" class="btn btn-sm btn-danger">Delete</a>
+                    <a href="{{ route('articles.show', [article.id]) }}" class="btn btn-sm btn-info">View</a>
+                    
+                    <form method="POST" action="{{ route('articles.update', [article.id]) }}>
+                      {{ csrfField() }}
+                      <button type="submit" class="btn btn-sm btn-warning">Edit</button>
+                    </form>
+
+                    <form method="POST" action="{{ route('articles.destroy', [article.id]) }}?_method=DELETE">
+                      {{ csrfField() }}
+                      <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>           
                   </div>
                 </td>
               </tr>

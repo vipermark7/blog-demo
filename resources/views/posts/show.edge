@@ -1,10 +1,13 @@
-@component('layouts/main', { title: 'Show Blog Post' })
+@component('layouts/main', { title: 'Show Article' })
   @slot('main')
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>{{ article.title }}</h1>
     <div>
-      <a href="{{ route('articles.edit', [article.id]) }}" class="btn btn-warning">Edit</a>
-      <a href="{{ route('articles.index') }}" class="btn btn-secondary ms-2">Back to List</a>
+      <form method="POST" action="{{ route('articles.edit', [article.id]) }}>
+        {{ csrfField() }}
+        <button type="submit" class="btn btn-sm btn-warning">Edit</button>
+      </form>
+      <a href="{{ route('articles.index') }}" class="btn btn-secondary ms-2">Back to All Articles</a>
     </div>
   </div>
 
